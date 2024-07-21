@@ -1,2 +1,5 @@
 Flask
 flake8
+beautifulsoup4
+requests
+pandas
