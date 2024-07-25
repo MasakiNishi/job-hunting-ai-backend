@@ -51,7 +51,7 @@ def scrape_jobs(job_title, location, job_type, sector, experience, other):
                      # 'location': location,
                      # etc
                      })
-        
+
     return jobs
 
 
