@@ -18,9 +18,11 @@ vertexai.init(project=PROJECT_ID, location=REGION)
 MODEL_ID = os.getenv('MODEL_ID')
 generative_multimodal_model = GenerativeModel(MODEL_ID)
 
+
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
+
 
 # Just a test endpoint to check if the model is working
 @app.route('/gemini', methods=['POST'])
@@ -35,6 +37,7 @@ def gemini():
     answer = response.text
 
     return jsonify({'answer': answer})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
