@@ -74,7 +74,6 @@ target/
 celerybeat-schedule
 
 # dotenv
-.env
 .venv
 env/
 venv/
