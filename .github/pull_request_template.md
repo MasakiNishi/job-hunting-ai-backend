@@ -6,7 +6,7 @@
 
 <!-- Link to the Jira issue(s) this pull request addresses. -->
 <!-- Example: -->
-<!-- JIRA: [KAN-1](https://oregonstate-team-a4gvoaif.atlassian.net/jira/software/projects/KAN/boards/1?selectedIssue=KAN-1) -->
+<!-- JIRA: [KAN-1](https://oregonstate-team-a4gvoaif.atlassian.net/browse/KAN-1) -->
 
 ## Motivation and Context
 
