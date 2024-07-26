@@ -74,6 +74,7 @@ target/
 celerybeat-schedule
 
 # dotenv
+.env
 .venv
 env/
 venv/
@@ -109,3 +110,6 @@ dmypy.json
 *.log
 *.bak
 *.swp
+
+# GCP credentials file
+service-account-key.json
