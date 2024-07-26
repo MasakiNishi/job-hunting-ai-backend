@@ -49,7 +49,10 @@ for job_id in id_list:
     # Try to extract and store the job title
     try:
         job_post["job_title"] = job_soup.find(
-            "h2", {"class": "top-card-layout__title font-sans text-lg papabear:text-xl font-bold leading-open text-color-text mb-0 topcard__title"}
+            "h2", {
+                "class": ("top-card-layout__title font-sans text-lg papabear:text-xl "
+                          "font-bold leading-open text-color-text mb-0 topcard__title")
+            }
         ).text.strip()
     except AttributeError:
         job_post["job_title"] = None
@@ -73,7 +76,10 @@ for job_id in id_list:
     # Try to extract and store the number of applicants
     try:
         job_post["num_applicants"] = job_soup.find(
-            "span", {"class": "num-applicants__caption topcard__flavor--metadata topcard__flavor--bullet"}
+            "span", {
+                "class": ("num-applicants__caption topcard__flavor--metadata "
+                          "topcard__flavor--bullet")
+            }
         ).text.strip()
     except AttributeError:
         job_post["num_applicants"] = None
