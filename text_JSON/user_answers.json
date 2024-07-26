@@ -1,0 +1,16 @@
+{
+    "jobType": [
+        "Full time",
+        "Part time",
+        "Freelance",
+        "Internship"
+    ],
+    "location": [
+        "Remote"
+    ],
+    "sector": [
+        "Education"
+    ],
+    "experience": "Entry-level",
+    "textInput": "test"
+}
