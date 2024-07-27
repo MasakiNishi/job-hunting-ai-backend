@@ -13,60 +13,43 @@ class LinkedInScraper:
         job_soup = self.utils.parse_html(job_response)
 
         job_post = {'job_url': job_url}
-
-        try:
-            job_post["job_title"] = job_soup.find(
-                "h2", {
-                    "class": (
-                        "top-card-layout__title font-sans text-lg papabear:text-xl "
-                        "font-bold leading-open text-color-text mb-0 topcard__title"
-                    )
-                }
-            ).text.strip()
-        except AttributeError:
-            job_post["job_title"] = None
-
-        try:
-            job_post["company_name"] = job_soup.find(
-                "a", {"class": "topcard__org-name-link topcard__flavor--black-link"}
-            ).text.strip()
-        except AttributeError:
-            job_post["company_name"] = None
-
-        try:
-            job_post["time_posted"] = job_soup.find(
-                "span", {"class": "posted-time-ago__text topcard__flavor--metadata"}
-            ).text.strip()
-        except AttributeError:
-            job_post["time_posted"] = None
-
-        try:
-            job_post["num_applicants"] = job_soup.find(
-                "span", {
-                    "class": (
-                        "num-applicants__caption topcard__flavor--metadata "
-                        "topcard__flavor--bullet"
-                    )
-                }
-            ).text.strip()
-        except AttributeError:
-            job_post["num_applicants"] = None
-
-        try:
-            job_post["job_description"] = job_soup.find(
-                "div", {"class": "show-more-less-html__markup"}
-            ).text.strip()
-        except AttributeError:
-            job_post["job_description"] = None
+        job_post["job_title"] = self._extract_text(job_soup, "h2", {
+            "class": (
+                "top-card-layout__title font-sans text-lg papabear:text-xl "
+                "font-bold leading-open text-color-text mb-0 topcard__title"
+            )
+        })
+        job_post["company_name"] = self._extract_text(job_soup, "a", {
+            "class": "topcard__org-name-link topcard__flavor--black-link"
+        })
+        job_post["time_posted"] = self._extract_text(job_soup, "span", {
+            "class": "posted-time-ago__text topcard__flavor--metadata"
+        })
+        job_post["num_applicants"] = self._extract_text(job_soup, "span", {
+            "class": (
+                "num-applicants__caption topcard__flavor--metadata "
+                "topcard__flavor--bullet"
+            )
+        })
+        job_post["job_description"] = self._extract_text(job_soup, "div", {
+            "class": "show-more-less-html__markup"
+        })
 
         print(f"Fetched job details: {job_post}")
         return job_post
+
+    def _extract_text(self, soup, tag, attrs):
+        """Helper method to extract text from a BeautifulSoup object."""
+        try:
+            return soup.find(tag, attrs).text.strip()
+        except AttributeError:
+            return None
 
     def scrape_jobs(self, criteria_filename='./text_JSON/user_answers.json',
                     output_filename='./text_JSON/linkedin_jobs.json', num_jobs=5):
         """Scrape job postings and save to a JSON file."""
         # Load the user criteria from user_responses.json
-        criteria = self.utils.load_user_criteria(criteria_filename)
+        self.utils.load_user_criteria(criteria_filename)
 
         # Specify query for remote jobs in Technology sector in the United States
         list_url = (
@@ -95,7 +78,7 @@ class LinkedInScraper:
 
         # Convert the job list to a DataFrame and save it to JSON
         jobs_df = self.utils.convert_to_dataframe(job_list)
-        
+
         # Save to JSON without escape characters
         jobs_df.to_json(output_filename, orient='records', lines=True, force_ascii=False)
         print(f"Job data saved to {output_filename}")
