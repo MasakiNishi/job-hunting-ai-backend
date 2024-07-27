@@ -1,90 +1,98 @@
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
-import json
+from scrape_utils import ScraperUtils
 
+class LinkedInScraper:
+    def __init__(self):
+        self.utils = ScraperUtils()
 
-# Load the user criteria from user_responses.json
-def load_user_criteria(filename='./text_JSON/user_answers.json'):
-    with open(filename, 'r') as file:
-        criteria = json.load(file)
-    return criteria
+    def extract_job_details(self, job_id):
+        """Extract job details from job ID."""
+        job_url = f"https://www.linkedin.com/jobs/view/{job_id}"
+        print(f"Fetching job details from {job_url}")
+        job_response = self.utils.send_get_request(job_url)
+        job_soup = self.utils.parse_html(job_response)
 
+        job_post = {'job_url': job_url}
 
-list_url = ("https://www.linkedin.com/jobs-guest/jobs/api/"
-            "seeMoreJobPostings/search?keywords=Finance&location=Remote")
+        try:
+            job_post["job_title"] = job_soup.find(
+                "h2", {
+                    "class": ("top-card-layout__title font-sans text-lg papabear:text-xl "
+                              "font-bold leading-open text-color-text mb-0 topcard__title")
+                }
+            ).text.strip()
+        except AttributeError:
+            job_post["job_title"] = None
 
-# Send a GET request to the URL and store the response
-response = requests.get(list_url)
+        try:
+            job_post["company_name"] = job_soup.find(
+                "a", {"class": "topcard__org-name-link topcard__flavor--black-link"}
+            ).text.strip()
+        except AttributeError:
+            job_post["company_name"] = None
 
-# Get the HTML, parse the response and find all list items (job postings)
-list_data = response.text
-list_soup = BeautifulSoup(list_data, "html.parser")
-page_jobs = list_soup.find_all("li")
+        try:
+            job_post["time_posted"] = job_soup.find(
+                "span", {"class": "posted-time-ago__text topcard__flavor--metadata"}
+            ).text.strip()
+        except AttributeError:
+            job_post["time_posted"] = None
 
-# Create an empty list to store the job postings
-id_list = []
+        try:
+            job_post["num_applicants"] = job_soup.find(
+                "span", {
+                    "class": ("num-applicants__caption topcard__flavor--metadata "
+                              "topcard__flavor--bullet")
+                }
+            ).text.strip()
+        except AttributeError:
+            job_post["num_applicants"] = None
 
-# Iterate through job postings to find job IDs
-for job in page_jobs:
-    base_card_div = job.find("div", {"class": "base-card"})
-    job_id = base_card_div.get("data-entity-urn").split(":")[3]
-    id_list.append(job_id)
+        try:
+            job_post["job_description"] = job_soup.find(
+                "div", {"class": "show-more-less-html__markup"}
+            ).text.strip()
+        except AttributeError:
+            job_post["job_description"] = None
 
-# Initialize an empty list to store job information
-job_list = []
+        print(f"Fetched job details: {job_post}")
+        return job_post
 
-# Loop through the list of job IDs and get each URL
-for job_id in id_list:
-    # Construct the URL for each job using the job ID
-    job_url = f"https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/{job_id}"
+    def scrape_jobs(self, criteria_filename='./text_JSON/user_answers.json', output_filename='./text_JSON/linkedin_jobs.json', num_jobs=5):
+        # Load the user criteria from user_responses.json
+        criteria = self.utils.load_user_criteria(criteria_filename)
 
-    # Send a GET request to the job URL and parse the response
-    job_response = requests.get(job_url)
-    job_soup = BeautifulSoup(job_response.text, "html.parser")
+        # Specify query for remote jobs in Technology sector in the United States
+        list_url = (
+            "https://www.linkedin.com/jobs-guest/jobs/api/"
+            "seeMoreJobPostings/search?keywords=Technology&location=United%20States&"
+            "geoId=103644278"  # LinkedIn US remote job geoId
+        )
 
-    # Create a dictionary to store job details
-    job_post = {'job_url': job_url}
+        # Send a GET request to the URL and store the response
+        list_data = self.utils.send_get_request(list_url)
 
-    # Try to extract and store the job title
-    try:
-        job_post["job_title"] = job_soup.find(
-            "h2", {
-                "class": ("top-card-layout__title font-sans text-lg papabear:text-xl "
-                          "font-bold leading-open text-color-text mb-0 topcard__title")
-            }
-        ).text.strip()
-    except AttributeError:
-        job_post["job_title"] = None
+        # Get the HTML, parse the response and find all list items (job postings)
+        list_soup = self.utils.parse_html(list_data)
+        page_jobs = list_soup.find_all("li")
 
-    # Try to extract and store the company name
-    try:
-        job_post["company_name"] = job_soup.find(
-            "a", {"class": "topcard__org-name-link topcard__flavor--black-link"}
-        ).text.strip()
-    except AttributeError:
-        job_post["company_name"] = None
+        # Extract job IDs from the job postings
+        id_list = self.utils.extract_job_ids(page_jobs)
 
-    # Try to extract and store the time posted
-    try:
-        job_post["time_posted"] = job_soup.find(
-            "span", {"class": "posted-time-ago__text topcard__flavor--metadata"}
-        ).text.strip()
-    except AttributeError:
-        job_post["time_posted"] = None
+        # Initialize an empty list to store job information
+        job_list = []
 
-    # Try to extract and store the number of applicants
-    try:
-        job_post["num_applicants"] = job_soup.find(
-            "span", {
-                "class": ("num-applicants__caption topcard__flavor--metadata "
-                          "topcard__flavor--bullet")
-            }
-        ).text.strip()
-    except AttributeError:
-        job_post["num_applicants"] = None
+        # Loop through the list of job IDs and get each job's details, limited to `num_jobs`
+        for job_id in id_list[:num_jobs]:
+            job_details = self.extract_job_details(job_id)
+            job_list.append(job_details)
 
-    job_list.append(job_post)
+        # Convert the job list to a DataFrame and save it to JSON
+        jobs_df = self.utils.convert_to_dataframe(job_list)
+        
+        # Save to JSON without escape characters
+        jobs_df.to_json(output_filename, orient='records', lines=True, force_ascii=False)
+        print(f"Job data saved to {output_filename}")
 
-jobs_df = pd.DataFrame(job_list)
-jobs_df.to_json('./text_JSON/linkedin_jobs.json', orient='records', lines=True)
+if __name__ == "__main__":
+    scraper = LinkedInScraper()
+    scraper.scrape_jobs()
