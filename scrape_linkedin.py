@@ -1,5 +1,6 @@
 from scrape_utils import ScraperUtils
 
+
 class LinkedInScraper:
     def __init__(self):
         self.utils = ScraperUtils()
@@ -16,8 +17,10 @@ class LinkedInScraper:
         try:
             job_post["job_title"] = job_soup.find(
                 "h2", {
-                    "class": ("top-card-layout__title font-sans text-lg papabear:text-xl "
-                              "font-bold leading-open text-color-text mb-0 topcard__title")
+                    "class": (
+                        "top-card-layout__title font-sans text-lg papabear:text-xl "
+                        "font-bold leading-open text-color-text mb-0 topcard__title"
+                    )
                 }
             ).text.strip()
         except AttributeError:
@@ -40,8 +43,10 @@ class LinkedInScraper:
         try:
             job_post["num_applicants"] = job_soup.find(
                 "span", {
-                    "class": ("num-applicants__caption topcard__flavor--metadata "
-                              "topcard__flavor--bullet")
+                    "class": (
+                        "num-applicants__caption topcard__flavor--metadata "
+                        "topcard__flavor--bullet"
+                    )
                 }
             ).text.strip()
         except AttributeError:
@@ -57,7 +62,9 @@ class LinkedInScraper:
         print(f"Fetched job details: {job_post}")
         return job_post
 
-    def scrape_jobs(self, criteria_filename='./text_JSON/user_answers.json', output_filename='./text_JSON/linkedin_jobs.json', num_jobs=5):
+    def scrape_jobs(self, criteria_filename='./text_JSON/user_answers.json',
+                    output_filename='./text_JSON/linkedin_jobs.json', num_jobs=5):
+        """Scrape job postings and save to a JSON file."""
         # Load the user criteria from user_responses.json
         criteria = self.utils.load_user_criteria(criteria_filename)
 
@@ -92,6 +99,7 @@ class LinkedInScraper:
         # Save to JSON without escape characters
         jobs_df.to_json(output_filename, orient='records', lines=True, force_ascii=False)
         print(f"Job data saved to {output_filename}")
+
 
 if __name__ == "__main__":
     scraper = LinkedInScraper()

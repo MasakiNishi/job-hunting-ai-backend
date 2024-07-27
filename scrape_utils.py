@@ -4,6 +4,7 @@ import pandas as pd
 import json
 import time
 
+
 class ScraperUtils:
     def __init__(self, backoff_factor=0.3):
         self.backoff_factor = backoff_factor
@@ -15,22 +16,25 @@ class ScraperUtils:
         return criteria
 
     def send_get_request(self, url, retries=5):
-        """Send a GET request to a URL with a retry mechanism. This bypasses the LinkedIn request limit."""
+        """Send a GET request to a URL with a retry mechanism."""
         print(f"Sending GET request to {url}")
         for i in range(retries):
             try:
                 response = requests.get(url)
-                response.raise_for_status()  # Raises an HTTPError if the HTTP request returned an unsuccessful status code
+                response.raise_for_status()
                 print("GET request successful")
                 return response.text
             except requests.exceptions.HTTPError as e:
                 print(f"HTTP error encountered: {e}")
                 if response.status_code == 429:
-                    print(f"Rate limit exceeded, retrying in {self.backoff_factor * (2 ** i)} seconds")
-                    time.sleep(self.backoff_factor * (2 ** i))  # Exponential backoff
+                    wait_time = self.backoff_factor * (2 ** i)
+                    print(f"Rate limit exceeded, retrying in {wait_time} seconds")
+                    time.sleep(wait_time)
                 else:
                     raise e
-        raise requests.exceptions.HTTPError(f"Failed to fetch data from {url} after {retries} retries")
+        raise requests.exceptions.HTTPError(
+            f"Failed to fetch data from {url} after {retries} retries"
+        )
 
     def parse_html(self, html_content):
         """Parse HTML content using BeautifulSoup."""
