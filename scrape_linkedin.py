@@ -46,12 +46,12 @@ class LinkedInScraper:
             return None
 
     def scrape_jobs(self, criteria_filename='./text_JSON/user_answers.json',
-                    output_filename='./text_JSON/linkedin_jobs.json', num_jobs=5):
+                    output_filename='./text_JSON/linkedin_jobs.json', num_jobs=8):
         """Scrape job postings and save to a JSON file."""
         # Load the user criteria from user_responses.json
         self.utils.load_user_criteria(criteria_filename)
 
-        # Specify query for remote jobs in Technology sector in the United States
+        # Specify query for remote jobs (geoId=103644278) in Technology sector in the United States
         list_url = (
             "https://www.linkedin.com/jobs-guest/jobs/api/"
             "seeMoreJobPostings/search?keywords=Technology&location=United%20States&"
