@@ -78,7 +78,7 @@ class LinkedInScraper:
 
         # **** Remove commented code eventually in main development branch ****
         # Convert the job list to a DataFrame and save it to JSON
-        #jobs_df = self.utils.convert_to_dataframe(job_list)
+        # jobs_df = self.utils.convert_to_dataframe(job_list)
 
         # Save to JSON without escape characters
         # jobs_df.to_json(output_filename, orient='records', lines=True, force_ascii=False)
