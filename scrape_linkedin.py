@@ -82,7 +82,7 @@ class LinkedInScraper:
 
         # Save to JSON without escape characters
         # jobs_df.to_json(output_filename, orient='records', lines=True, force_ascii=False)
-        
+
         self.utils.save_to_json(job_list, output_filename)
         print(f"Job data saved to {output_filename}")
 
