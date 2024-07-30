@@ -59,15 +59,17 @@ class ScraperUtils:
         """Convert a list of dictionaries to a pandas DataFrame."""
         print("Converting data to DataFrame")
         return pd.DataFrame(data_list)
-    
+
+    @staticmethod
     def extract_data_section(json_str):
         """Extract the data section from a JSON string."""
         parsed_json = json.loads(json_str)
         data_section = parsed_json.get('data', [])
         return data_section
-    
-    # Function to create the query string based on user responses
+
+    @staticmethod
     def create_query(user_responses):
+        """Create the query string based on user responses."""
         job_types = user_responses.get('jobType', [])
         locations = user_responses.get('location', [])
         sectors = user_responses.get('sector', [])
@@ -88,5 +90,4 @@ class ScraperUtils:
             query_parts.append(text_input)
 
         query = " AND ".join(query_parts)
-    
         return query

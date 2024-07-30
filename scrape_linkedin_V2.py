@@ -4,23 +4,26 @@ import json
 
 url = "https://api.theirstack.com/v1/jobs/search"
 
-technology = [1594, 6, 2458, 3134, 3128, 3252, 84, 1285, 3127, 4, 109, 3131, 5, 3130, 3101, 3099, 3100]
-finance = [43, 129, 1720, 45, 46, 1713, 106, 1673, 41, 141, 1696, 1678, 1742, 1743, 1745, 42, 1738, 1737, 1725]
-healthcare = [14, 2115, 2112, 2081, 88, 2128, 2122, 2125, 13, 125, 2077, 2048, 2045, 2060, 2074, 2069, 139, 2050, 2063, 2054, 2040, 2091]
+technology = [
+    1594, 6, 2458, 3134, 3128, 3252, 84, 1285, 3127, 4, 109, 3131, 5, 3130, 3101,
+    3099, 3100
+]
+finance = [
+    43, 129, 1720, 45, 46, 1713, 106, 1673, 41, 141, 1696, 1678, 1742, 1743, 1745,
+    42, 1738, 1737, 1725
+]
+healthcare = [
+    14, 2115, 2112, 2081, 88, 2128, 2122, 2125, 13, 125, 2077, 2048, 2045, 2060, 2074,
+    2069, 139, 2050, 2063, 2054, 2040, 2091
+]
 retail = []
 energy = []
 education = []
 
 payload = {
     "order_by": [
-        {
-            "desc": True,
-            "field": "date_posted"
-        },
-        {
-            "desc": True,
-            "field": "discovered_at"
-        }
+        {"desc": True, "field": "date_posted"},
+        {"desc": True, "field": "discovered_at"}
     ],
     "page": 0,  # Start from page 0
     "limit": 500,
@@ -104,31 +107,25 @@ payload = {
 
 headers = {
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3b25nYTlAb3JlZ29uc3RhdGUuZWR1IiwicGVybWlzc2lvbnMiOiJ1c2VyIn0.WqpiPmZA5xjtN_0TvEKIBrPTubZz1dyQhtaxXfEVXk8"
+    "Authorization": (
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3b25nYTlAb3JlZ29uc3RhdGUuZWR1IiwicGVybWlzc2lvbnMiOiJ1c2VyIn0."
+        "WqpiPmZA5xjtN_0TvEKIBrPTubZz1dyQhtaxXfEVXk8"
+    )
 }
 
 all_job_results = []
 
 while True:
     response = requests.post(url, json=payload, headers=headers)
-
-    # Load the JSON string into a Python dictionary
     json_obj = json.loads(response.text)
-
-    # Extract the 'data' part
     data_part = json_obj.get('data', [])
 
-    # If no more data is returned, break the loop
     if not data_part:
         break
 
-    # Add the current page's results to the all_job_results list
     all_job_results.extend(data_part)
-
-    # Increment the page number for the next request
     payload['page'] += 1
 
-# Save all the job results into a JSON file
 with open('job_results.json', 'w') as f:
     json.dump(all_job_results, f, indent=2)
 
