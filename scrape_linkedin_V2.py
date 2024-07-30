@@ -1,5 +1,4 @@
 import requests
-from scrape_utils import ScraperUtils as utils
 import json
 
 url = "https://api.theirstack.com/v1/jobs/search"
