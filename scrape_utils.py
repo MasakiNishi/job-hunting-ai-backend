@@ -59,3 +59,34 @@ class ScraperUtils:
         """Convert a list of dictionaries to a pandas DataFrame."""
         print("Converting data to DataFrame")
         return pd.DataFrame(data_list)
+    
+    def extract_data_section(json_str):
+        """Extract the data section from a JSON string."""
+        parsed_json = json.loads(json_str)
+        data_section = parsed_json.get('data', [])
+        return data_section
+    
+    # Function to create the query string based on user responses
+    def create_query(user_responses):
+        job_types = user_responses.get('jobType', [])
+        locations = user_responses.get('location', [])
+        sectors = user_responses.get('sector', [])
+        experience = user_responses.get('experience', '')
+        text_input = user_responses.get('textInput', '')
+
+        query_parts = []
+
+        if job_types:
+            query_parts.append(" OR ".join(job_types))
+        if locations:
+            query_parts.append(" OR ".join(locations))
+        if sectors:
+            query_parts.append(" OR ".join(sectors))
+        if experience:
+            query_parts.append(experience)
+        if text_input:
+            query_parts.append(text_input)
+
+        query = " AND ".join(query_parts)
+    
+        return query

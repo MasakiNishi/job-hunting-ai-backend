@@ -1,16 +1,16 @@
 {
     "jobType": [
         "Full time",
-        "Part time",
-        "Freelance",
-        "Internship"
+        "Part time"
     ],
     "location": [
-        "Remote"
+        "Remote",
+        "On-site"
     ],
     "sector": [
-        "Education"
+        "Healthcare",
+        "Finance"
     ],
     "experience": "Entry-level",
-    "textInput": "test"
+    "textInput": ""
 }
