@@ -2,6 +2,7 @@ from scrape_utils import ScraperUtils
 import json
 import requests
 
+
 class LinkedInScraper:
     def __init__(self):
         self.utils = ScraperUtils()
