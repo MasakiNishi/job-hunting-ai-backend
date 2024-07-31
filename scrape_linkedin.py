@@ -1,6 +1,6 @@
-from scrape_utils import ScraperUtils
 import json
 import requests
+from scrape_utils import ScraperUtils
 
 
 class LinkedInScraper:
@@ -18,7 +18,6 @@ class LinkedInScraper:
         job_post["job_title"] = self._extract_text(job_soup, "h3", {
             "class": "base-search-card__title"
         })
-            
         job_post["company_name"] = self._extract_text(job_soup, "a", {
             "class": "topcard__org-name-link topcard__flavor--black-link"
         })
