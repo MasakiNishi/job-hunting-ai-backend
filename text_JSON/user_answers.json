@@ -1,0 +1,16 @@
+{
+    "jobType": [
+        "Full time",
+        "Part time"
+    ],
+    "location": [
+        "Remote",
+        "On-site"
+    ],
+    "sector": [
+        "Healthcare",
+        "Finance"
+    ],
+    "experience": "Entry-level",
+    "textInput": ""
+}

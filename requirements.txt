@@ -2,3 +2,5 @@ Flask
 flake8
 google-cloud-aiplatform
 python-dotenv
+beautifulsoup4
+pandas
