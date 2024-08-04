@@ -3,6 +3,14 @@ from flask_cors import CORS
 from serpapi import GoogleSearch
 from scrape_utils import ScraperUtils as utils
 import json
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+
+# Retrieve API_KEY from environment
+API_KEY = os.getenv('API_KEY')
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
@@ -17,7 +25,7 @@ def submit():
 
     # Define the parameters for the GoogleSearch API using the constructed query string
     params = {
-        "api_key": "94f654ce307f24ded973794eb47618b9985ad4582f113349fed5529cb8fa5919",
+        "api_key": API_KEY,
         "engine": "google_jobs",
         "google_domain": "google.com",
         "q": query_string
