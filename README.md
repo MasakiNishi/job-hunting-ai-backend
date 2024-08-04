@@ -12,20 +12,45 @@
 
    This command creates a `.env` file from `.env.local`.
 
-## Using the Gemini API Locally
-
-To use the Gemini API Locally, you need to configure certain environment variables. Follow these steps to set up:
-
-1. **Modify the Environment Variables**:
-
-   - Open the `.env` file in your preferred text editor.
-   - Update the `PROJECT_ID` and `MODEL_ID` values to match our specific configurations. These values have been provided to you via MS Teams chat.
-
-2. **Place the Service Account Key File**:
-   Place the `service-account-key.json` file in the root directory. This file is necessary for authenticating with the Gemini API. This also have been provided to you via MS Teams chat.
-
 ### Important Notes:
 
 - **Securing Secrets**: Ensure that you do not commit and push the `.env.local` file with secret values to the repository. This precaution is why we rename `.env.local` to `.env`, where secrets are to be stored. The `.env` file should already be listed in the `.gitignore` to prevent it from being tracked by Git.
-- **Service Account Key File**: The `service-account-key.json` file contains sensitive authentication information. Do not share this file with anyone and ensure it is kept secure to prevent unauthorized access.
-- **API Request Costs**: Be aware that each request to the Gemini API incurs costs. Please avoid sending large volumes of requests during development to manage costs effectively.
+
+## Running the Google Jobs Scrape Script
+
+This section provides instructions for running the Google Jobs scrape script inside a Docker container.
+
+### Steps:
+
+1. **Change API_KEY in .env file**
+
+2. **Ensure Docker is Running:**
+
+   - Make sure Docker is installed and running on your system.
+
+3. **Start Containers:**
+
+   - Use `docker-compose up` or the appropriate Docker command to start your containers.
+
+4. **Find Container ID:**
+
+   - Use the following command to list running containers and find the ID for the required container:
+     ```bash
+     docker ps
+     ```
+
+5. **Access Container Shell:**
+
+   - Access the shell of the Docker container using its ID:
+     ```bash
+     docker exec -it [containerId] bash
+     ```
+     Replace `[containerId]` with the actual ID of your backend Docker container.
+
+6. **Run the Script:**
+   - Within the Docker container's shell, execute the script:
+     ```bash
+     python scrape_googlejobs.py
+     ```
+
+This will execute the script inside the Docker container, repopulate the `scrape_googlejobs.json` file with new results, and provide terminal output.

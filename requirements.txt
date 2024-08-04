@@ -1,7 +1,6 @@
 Flask
+flask_cors
 flake8
-google-cloud-aiplatform
 python-dotenv
 pandas
 scikit-learn
-flask-cors
