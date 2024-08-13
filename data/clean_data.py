@@ -29,9 +29,11 @@ def load_data(path):
     except IOError as error:
         print(f"Error loading '{path}' file due to: {error}")
 
+
 def check_word(filter_list, text):
     """A helper function to check for words in the filter methods below."""
     return any(word in text for word in filter_list)
+
 
 def check_experience(patterns, text):
     """Helper function to check work experience in filter_experience."""
@@ -39,6 +41,7 @@ def check_experience(patterns, text):
         if re.search(pattern, text):
             return True
     return False
+
 
 # Function to filter for work arrangements: Remote, Hybrid, On-site
 def filter_arrangement(title, location, desc):
