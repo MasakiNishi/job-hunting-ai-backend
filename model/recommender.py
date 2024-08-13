@@ -45,7 +45,7 @@ def job_recommender(user_data, job_listings):
     calculates a cosine similarity score, which returns a ranking
     of the top 5 best matches according to the user's requirements."""
 
-    # Ensure the model recognizes all incoming data in array form
+    # Ensure the model recognizes all incoming data in array format
     if not isinstance(user_data['experience'], list):
         user_data['experience'] = [user_data['experience']]
     if not isinstance(user_data['textInput'], list):
