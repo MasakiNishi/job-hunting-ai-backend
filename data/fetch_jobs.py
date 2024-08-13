@@ -71,7 +71,7 @@ def save_results_to_json(path, data):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    # Implement try / catch block in data fails to write
+    # Implement try / except block in data fails to write
     try:
         with open(path, 'w') as file:
             json.dump(data, file, indent=2)
