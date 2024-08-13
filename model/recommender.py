@@ -44,6 +44,13 @@ def job_recommender(user_data, job_listings):
     cleaned_listings.json, as the matrix (a Pandas dataframe), then
     calculates a cosine similarity score, which returns a ranking
     of the top 5 best matches according to the user's requirements."""
+
+    # Ensure the model recognizes all incoming data in array format
+    if not isinstance(user_data['experience'], list):
+        user_data['experience'] = [user_data['experience']]
+    if not isinstance(user_data['textInput'], list):
+        user_data['textInput'] = [user_data['textInput']]
+
     # Create our features based off user input:
     job_types = ', '.join(user_data['jobType'])
     arrangements = ', '.join(user_data['arrangement'])
