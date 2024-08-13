@@ -44,6 +44,8 @@ def submit():
     then loads this list and the cleaned_listings.json file into our ML
     model, job_recommender(), and returns the output to the frontend."""
     # Use the os module to create a portable path for our JSON file
+    # Clear the list so the status message refreshes properly
+    user_list.clear()
     clean_path = os.path.join(os.path.dirname(__file__),
                               'json_files', 'cleaned_listings.json')
     # Implement try / catch block when assigning the incoming response
@@ -81,4 +83,4 @@ def submit():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5001)
